@@ -8,11 +8,32 @@ output:
 
 ## Loading and preprocessing the data
 
-```{r}
+
+```r
 setwd("/Users/Chris/Documents/GitHub/RepData_PeerAssessment1")
 
 # Load Packages
 library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 library(ggplot2)
 
 # download zip file containing data if it hasn't already been downloaded
@@ -43,7 +64,8 @@ activities$intervalDateTime <-
 
 ## What is mean total number of steps taken per day?
 
-```{r StepsPerDay}
+
+```r
 # Get total steps per day
 dailySteps <- tapply(activities$steps,activities$date,sum, na.rm=TRUE)
 
@@ -60,12 +82,14 @@ hist(dailySteps,
      las=1)
 ```
 
-The median daily steps is `r formatC(medianSteps, format="d", big.mark=",")` and the mean `r formatC(meanSteps, format="d", big.mark=",")`.
+![](PA1_template_files/figure-html/StepsPerDay-1.png)<!-- -->
+
+The median daily steps is 10,395 and the mean 9,354.
 
 ## What is the average daily activity pattern?
 
-```{r AverageDailyActivityPattern}
 
+```r
 # Get Average (Mean) Steps for Each Interval, regardless of Day
 intervals <- aggregate(
     steps ~ interval,
@@ -84,25 +108,29 @@ plot.ts(x = intervals$interval,
 axis(1, 
      at = seq(0, 2400, by = 100),  # Side 1 (below axis)
      las=2)                        # Labels perpendicular to axis
-
-# Find interval with max average no of steps
-maxInterval<- intervals[which.max(intervals$steps),]
-
 ```
 
-The 5-minute interval with the maximum number of steps is `r maxInterval$interval` with an average of `r formatC(maxInterval$steps, format="d", big.mark=",")` steps.
+![](PA1_template_files/figure-html/AverageDailyActivityPattern-1.png)<!-- -->
+
+```r
+# Find interval with max average no of steps
+maxInterval<- intervals[which.max(intervals$steps),]
+```
+
+The 5-minute interval with the maximum number of steps is 835 with an average of 206 steps.
 
 ## Imputing missing values
 
-```{r}
+
+```r
 # Get total rows with NAs
 rowsWithNAs <- sum(is.na(activities))
 ```
 
-The total number of missing values in the dataset (i.e. the total number of rows with NAs) is `r formatC(rowsWithNAs, format="d", big.mark=",")`
+The total number of missing values in the dataset (i.e. the total number of rows with NAs) is 2,304
 
-```{r StepsPerDayCleaned}
 
+```r
 # Replace NAs with average for the given interval
 activitiesCleaned <- activities %>%
     group_by(interval) %>%
@@ -124,16 +152,18 @@ hist(dailyStepsCleaned,
      ylab="No. of Days", 
      col="green",
      las=1)
-
 ```
 
-When the data is cleaned of NAs, the median daily steps is `r formatC(medianStepsCleaned, format="d", big.mark=",")` and the mean `r formatC(meanStepsCleaned, format="d", big.mark=",")`.
+![](PA1_template_files/figure-html/StepsPerDayCleaned-1.png)<!-- -->
 
-This compares to a median daily steps of `r formatC(medianSteps, format="d", big.mark=",")` and mean of `r formatC(meanSteps, format="d", big.mark=",")` for the raw data.  The effect is to increase the number of steps and spread them more evenly across the days.
+When the data is cleaned of NAs, the median daily steps is 10,766 and the mean 10,766.
+
+This compares to a median daily steps of 10,395 and mean of 9,354 for the raw data.  The effect is to increase the number of steps and spread them more evenly across the days.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r AverageDailyActivityPatternByDayType}
+
+```r
 # Find Weekends
 activitiesCleaned <- activitiesCleaned %>%
     mutate(weekday = weekdays(intervalDateTime)) %>%
@@ -156,5 +186,6 @@ ggplot(intervalsCleanedByDayType,
          y = "Average Steps",
          title = "Average Daily Activity Pattern") +
     facet_wrap(~ dayType, ncol = 1)
-
 ```
+
+![](PA1_template_files/figure-html/AverageDailyActivityPatternByDayType-1.png)<!-- -->
