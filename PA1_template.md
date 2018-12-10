@@ -36,21 +36,6 @@ library(dplyr)
 ```r
 library(ggplot2)
 
-# download zip file containing data if it hasn't already been downloaded
-zipUrl <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
-zipFile <- "activity.zip"
-# zipFile will be unzipped to folder of same name less the .zip extension
-dataDest <- gsub(".zip$", "", zipFile)
-
-if (!file.exists(zipFile)) {
-    download.file(zipUrl, zipFile, mode = "wb")
-}
-
-# unzip zip file containing data if data directory doesn't already exist
-if (!file.exists(dataDest)) {
-    unzip(zipFile)
-}
-
 # load data
 activities <- read.csv("activity.csv")
 

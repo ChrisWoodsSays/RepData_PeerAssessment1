@@ -141,21 +141,6 @@ library(dplyr)</code></pre>
 ##     intersect, setdiff, setequal, union</code></pre>
 <pre class="r"><code>library(ggplot2)
 
-# download zip file containing data if it hasn't already been downloaded
-zipUrl &lt;- &quot;https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip&quot;
-zipFile &lt;- &quot;activity.zip&quot;
-# zipFile will be unzipped to folder of same name less the .zip extension
-dataDest &lt;- gsub(&quot;.zip$&quot;, &quot;&quot;, zipFile)
-
-if (!file.exists(zipFile)) {
-    download.file(zipUrl, zipFile, mode = &quot;wb&quot;)
-}
-
-# unzip zip file containing data if data directory doesn't already exist
-if (!file.exists(dataDest)) {
-    unzip(zipFile)
-}
-
 # load data
 activities &lt;- read.csv(&quot;activity.csv&quot;)
 
